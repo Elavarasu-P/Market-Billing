@@ -47,8 +47,8 @@ app.get('/staff', (req, res) => {
 app.get('/stock',(req,res)=>{
   res.sendFile(path.join(__dirname, 'stock.html'));
 });
-// app.get('/income',(req,res)=>{
-//   res.sendFile(path.join(__dirname, 'income.html'));
+// app.get('/report',(req,res)=>{
+//   res.sendFile(path.join(__dirname, 'report.html'));
 // });
 
 
@@ -100,6 +100,10 @@ app.get('/some', (req, res) => {
   // Render the template with the totalIncome value
   res.render('incomeSearch', { totalIncome });
 });
+app.get('/someReport', (req, res) => {
+  // Render the template with the totalIncome value
+  res.render('report', { totalIncome });
+});
 
 app.post('/getIncome', async (req, res) => {
   try {
@@ -115,6 +119,20 @@ app.post('/getIncome', async (req, res) => {
       res.status(500).send('Internal Server Error');
   }
 });
+app.post('/getReport', async (req, res) => {
+  try {
+      const data = req.body;
+      // Compute the total income
+       totalIncome = await GetIncome(data);
+      // Redirect to /some with the totalIncome value as a query parameter
+      console.log(totalIncome)
+      res.redirect(`/someReport?Total Report =${totalIncome}`);
+  } catch (error) {
+      // Handle errors
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+  }
+});
 
 
 // Assuming you have an Express route to render the template
@@ -122,6 +140,11 @@ app.get('/income', (req, res) => {
   const totalIncome = 0; // Get current date in yyyy-mm-dd format
   res.render('incomeSearch', { totalIncome });
 });
+app.get('/report', (req, res) => {
+  const totalIncome = 0; // Get current date in yyyy-mm-dd format
+  res.render('report', { totalIncome });
+});
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

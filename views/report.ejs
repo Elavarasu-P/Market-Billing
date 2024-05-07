@@ -1,12 +1,16 @@
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Income And Report</title>
+<title>Report Analysis</title>
 <style>
   body {
-    background-image: url('incomebg.png'); /* Replace 'background.jpg' with your image file */
+    background-image: url('reportbg.jpg'); /* Replace 'background.jpg' with your image file */
     background-size: cover;
     font-family: Arial, sans-serif;
     margin: 0;
@@ -16,12 +20,13 @@
     justify-content: center;
     align-items: center;
   }
-
   h2 {
-    text-align: center;
-    color: #120101;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  }
+  text-align: center; /* Align text to the center */
+  color: black;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  margin-top: 20px; /* Add margin to push it down from the top */
+}
+
 
   form {
     background-color: rgba(255, 255, 255, 0.7);
@@ -49,7 +54,7 @@
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
-    background-color: #4CAF50;
+    background-color: orange;
     color: white;
     cursor: pointer;
     width: 100%; /* Added width */
@@ -62,11 +67,10 @@
 </head>
 <body>
 
-<h2>Income And Report Analysis</h2>
-
-<form  method="POST" action="/getIncome">
+<h2>Report Analysis</h2>
+<form method="POST" action="/getReport" >
   <label for="fromDate">From Date:</label>
-  <!-- <input  type="date" id="fromDate" name="fromDate"> -->
+  <!-- <input type="date" id="fromDate" name="fromDate"> -->
   <input type="date" id="fromDate" name="fromDate" pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD">
   
   <input type="date" id="toDate" name="toDate" pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD">
@@ -74,7 +78,18 @@
   <!-- <input type="date" id="toDate" name="toDate"> -->
 
   <button type="submit">Search</button>
+  <div>
+    Total Income: 
+    <p id="totalIncome"><%= totalIncome %></p>
+  </div>
 </form>
-<p id="totalIncome">0</p>
+</body>
+<script>
+  function stop(event) {
+      event.preventDefault();
+      // Other custom logic if needed
+  }
+</script>
+
 </body>
 </html>
