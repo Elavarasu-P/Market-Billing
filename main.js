@@ -7,7 +7,7 @@ const {UserSignin,AddStock,AddInvoice,GetIncome} = require('./schema.js')
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }))
 app.set('view engine', 'ejs');
-app.set('views','D:/bill');
+// app.set('views','D:/bill'); 
 // parse application/json
 app.use(bodyParser.json())
 const PORT = process.env.PORT || 3000;
@@ -20,13 +20,14 @@ app.get('/signup', (req, res) => {
   res.sendFile(path.join(__dirname, 'signup.html'));
 
 });
-app.post('/bill', (req, res) => {
+app.get('/bill', (req, res) => {
   const currentDate = new Date();
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth() + 1;
   const day = currentDate.getDate();
   const fore = `${day < 10 ? '0' : ''}${day}-${month < 10 ? '0' : ''}${month}-${year}`;
-  const tot = JSON.parse(req.body.data);
+
+  const tot = JSON.parse(req.query.data);
   let total = 0;
   let data = tot['data1'];
   let cus = tot['cusname'];
@@ -122,6 +123,9 @@ app.get('/stock',(req,res)=>{
 // app.get('/report',(req,res)=>{
 //   res.sendFile(path.join(__dirname, 'report.html'));
 // });
+// app.get('/income',(req,res)=>{
+//   res.sendFile(path.join(__dirname, 'income.html'));
+// });
 
 
 app.get('/print',(req,res)=>{
@@ -160,19 +164,19 @@ app.post('/addInvoice',async(req,res)=>{
 //   // res.render
 //   res.render('incomeSearch', { totalIncome });
 // })
-// app.post('/getIncome',async(req,res)=>{
-//   const data = req.body;
-//   totalIncome =  await GetIncome(data)
-//   res.redirect('/some')
-//   // res.render('incomeSearch', { totalIncome });
-//   // console.log(data)
-// })
+app.post('/getIncome',async(req,res)=>{
+  const data = req.body;
+  totalIncome =  await GetIncome(data)
+  res.redirect('/some')
+  // res.render('incomeSearch', { totalIncome });
+  // console.log(data)
+})
 var totalIncome = 0;
 app.get('/some', (req, res) => {
   // Render the template with the totalIncome value
   res.render('incomeSearch', { totalIncome });
 });
-app.get('/someReport', (req, res) => {
+app.get('/getReport', (req, res) => {
   // Render the template with the totalIncome value
   res.render('report', { totalIncome });
 });
@@ -198,7 +202,7 @@ app.post('/getReport', async (req, res) => {
        totalIncome = await GetIncome(data);
       // Redirect to /some with the totalIncome value as a query parameter
       console.log(totalIncome)
-      res.redirect(`/someReport?Total Report =${totalIncome}`);
+      res.redirect(`/getReport?TotalReport =${totalIncome}`);
   } catch (error) {
       // Handle errors
       console.error(error);
