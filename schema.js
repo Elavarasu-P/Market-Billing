@@ -119,5 +119,3 @@ async function GetIncome(data){
 
 }
 module.exports = {UserSignin,AddStock,AddInvoice,GetIncome}
-
- 

@@ -22,7 +22,7 @@
       font-size: 24px;
     }
 
-    #goBack, #printInvoice, #addItem, #deleteItem,#downloadPdf {
+    #goBack, #printInvoice, #addItem, #deleteItem {
       background-color: #ff8c00;
       color: #fff;
       padding: 10px 20px;
@@ -102,7 +102,6 @@
 <body>
   <header>
     <h1>NELLAI MALLIGAI - VKL</h1>
-    <!-- <p>Company Name: NELLAI STORE</p> -->
   </header>
 
   <div id="customerInfo">
@@ -127,43 +126,28 @@
   </table>
 
   <div>
-    <button id="goBack">Go Back</button>
-    <button id="printInvoice" onclick="addInvoice()">Save Invoice</button>
-    <button id="downloadPdf" onclick="printInvoice()">Print Invoice</button>
-    <button id="deleteItem" onclick="deleteItem()">Delete Item</button>
-    <button id="addItem" onclick="addItem()">Add Item</button>
+    <a href="/home" style="display: inline-block;">
+      <button id="goBack">Go Back</button>
+    </a>
+    
+      <button id="printInvoice"onclick="addInvoice()" >Print</button>
+
+    
+    <button id="deleteItem" onclick="deleteItem()" style="display: inline-block;">Delete Item</button>
+    <button id="addItem" onclick="addItem()" style="display: inline-block;">Add Item</button>
   </div>
   
   <p id="totalPrice">Total Amount: ₹0.00</p>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
   <script>
     var currentBillNumber = 1;
     var data = {};
-    let data1 = {};
     window.onload = function() {
       document.getElementById('customerNameInput').focus();
       updateDateAndTime(); // Update date and time when the page loads
       setInterval(updateDateAndTime, 1000); // Set interval to update date and time every second
     };
-    let printInvoice = () => {
-      const form = document.createElement('form');
-      form.setAttribute('method', 'POST'); // Set method to POST
-      form.setAttribute('action', './bill');
-      let cusname = document.getElementById('customerNameInput').value;
-      console.log(data1)
-      let d = JSON.stringify({data1,cusname});
-      const input = document.createElement('input');
-      input.setAttribute('type', 'hidden'); // Hidden input field
-      input.setAttribute('name', 'data'); // Set input name to key
-      input.setAttribute('value', d); // Set input value to corresponding value in dataToSend
-      form.appendChild(input); // Append input field to the form
-      document.body.appendChild(form);
-
-// Submit the form
-      form.submit();
-      // window.location.href = './bill';
-    }
+    
     function goBack() {
       // Navigate back to index.html in Electron
       window.location.href = 'file:///D:/Consultancy/billing/index.html';
@@ -206,12 +190,9 @@
 
       rows.forEach(function(row) {
         var productName = row.cells[0].querySelector('input');
-        if(productName.value == "")return;
         var priceInput = row.cells[1].querySelector('input');
         var quantityInput = row.cells[2].querySelector('input');
         data[productName.value] = quantityInput.value;
-        let pri = priceInput.value,qua = quantityInput.value,na = productName.value;
-        data1[productName.value] = {pri,qua,na};
         // console.log(data)
         // Parse price and quantity as floats
         var price = parseFloat(priceInput.value);
@@ -247,6 +228,18 @@
       calculateTotal(); // Recalculate total after updating the quantity
     }
 
+    // Close dropdown list when clicking anywhere outside of it
+    document.addEventListener('click', function (event) {
+      var dropdownLists = document.querySelectorAll('.dropdown-list');
+      dropdownLists.forEach(function(dropdownList) {
+        if (!dropdownList.contains(event.target)) {
+          dropdownList.style.display = 'none';
+        }
+      });
+    });
+
+
+
     function addInvoice(){
       var total = document.getElementById('totalPrice').innerText;
       // console.log(total)
@@ -277,50 +270,6 @@
         console.error('There was a problem with the fetch operation:', error);
       });
     }
-
-    document.getElementById('downloadPdf').addEventListener('click', downloadPdf);
-
-//     function downloadPdf() {
-//     var customerName = document.getElementById('customerNameInput').value;
-//     var invoiceDate = document.getElementById('dateAndTime').innerText;
-//     var productNames = document.querySelectorAll('table tbody tr td:nth-child(1) input');
-//     var prices = document.querySelectorAll('table tbody tr td:nth-child(2) input');
-//     var quantities = document.querySelectorAll('table tbody tr td:nth-child(3) input');
-//     var totalAmount = document.getElementById('totalPrice').innerText;
-
-//     // Fill in the placeholders in the bill template
-//     document.getElementById('customerName').innerText = 'customerName: ' + customerName;
-//     document.getElementById('invoiceDate').innerText = 'Date: ' + invoiceDate;
-
-//     var tableBody = document.getElementById('invoiceBody');
-//     tableBody.innerHTML = ''; // Clear existing rows
-
-//     var html = '';
-//     for (var i = 0; i < productNames.length; i++) {
-//         html += '<tr>';
-//         html += '<td>' + productNames[i].value + '</td>';
-//         html += '<td>' + prices[i].value + '</td>';
-//         html += '<td>' + quantities[i].value + '</td>';
-//         html += '<td>' + (parseFloat(prices[i].value) * parseFloat(quantities[i].value)) + '</td>';
-//         html += '</tr>';
-//     }
-//     tableBody.innerHTML = html;
-
-//     // Fill in the total amount
-//     document.getElementById('totalAmount').innerText = 'Total: ' + totalAmount;
-
-//     // Generate PDF
-//     var opt = {
-//         margin: 0.5,
-//         filename: 'invoice.pdf',
-//         image: { type: 'jpeg', quality: 0.98 },
-//         html2canvas: { scale: 2 },
-//         jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-//     };
-//     var element = document.querySelector('.container');
-//     html2pdf().set(opt).from(element).save();
-// }
-
   </script>
 </body>
 </html>
